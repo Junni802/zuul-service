@@ -1,7 +1,10 @@
 package covy.filter;
 
 import com.netflix.zuul.ZuulFilter;
+import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
+import javax.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,26 +15,37 @@ import org.springframework.stereotype.Component;
  */
 
 
+@Slf4j
 @Component
 public class ZuulLoggingFilter extends ZuulFilter {
 
     @Override
-    public String filterType() {
+    public Object run() throws ZuulException {
+        log.info("************** printing logs: ");
+
+        RequestContext ctx = RequestContext.getCurrentContext();
+        HttpServletRequest request = ctx.getRequest();
+        log.info("**************" + request.getRequestURI());
+
         return null;
+    }
+
+    @Override
+    public String filterType() {
+
+        return "pre";
     }
 
     @Override
     public int filterOrder() {
-        return 0;
+
+        return 1;
     }
 
     @Override
     public boolean shouldFilter() {
-        return false;
+
+        return true;
     }
 
-    @Override
-    public Object run() throws ZuulException {
-        return null;
-    }
 }
